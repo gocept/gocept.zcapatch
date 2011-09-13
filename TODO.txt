@@ -1,3 +1,4 @@
 TODO
 
 - write tests
+- better name for PatchManager
