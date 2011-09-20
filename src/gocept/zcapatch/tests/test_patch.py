@@ -18,3 +18,13 @@ class PatchManagerTest(unittest.TestCase):
         self.assertEqual('bar', registry.getUtility(Interface))
         man.reset()
         self.assertEqual('foo', registry.getUtility(Interface))
+
+    def test_replaced_adapter_is_restored_after_reset(self):
+        registry = zope.component.registry.Components()
+        registry.registerAdapter(lambda x: 'foo', (Interface,), Interface)
+        self.assertEqual('foo', registry.getAdapter(object(), Interface))
+        man = gocept.zcapatch.PatchManager(registry)
+        man.patch_adapter(lambda x: 'bar', (Interface,), Interface)
+        self.assertEqual('bar', registry.getAdapter(object(), Interface))
+        man.reset()
+        self.assertEqual('foo', registry.getAdapter(object(), Interface))

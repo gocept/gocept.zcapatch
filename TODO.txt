@@ -2,3 +2,5 @@ TODO
 
 - write tests
 - better name for PatchManager
+- Change signature for patch_utility to conform to registerUtility
+- patch_adapter: if required/provided is None: read from factory
