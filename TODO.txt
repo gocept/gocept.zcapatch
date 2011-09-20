@@ -1,6 +1,7 @@
 TODO
 
-- write tests
-- better name for PatchManager
+- implement remove_handler
+- patch_adapter/handler: if required/provided is None: read from factory
 - Change signature for patch_utility to conform to registerUtility
-- patch_adapter: if required/provided is None: read from factory
+- better name for PatchManager
+- write tests to cover edge cases (passed-in registry etc.)

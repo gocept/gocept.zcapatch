@@ -9,6 +9,7 @@ class PatchManager(object):
     def __init__(self, registry=None):
         self.utilities = []
         self.adapters = []
+        self.added_handlers = []
         if registry is None:
             registry = zope.component.getSiteManager()
         self.registry = registry
@@ -35,12 +36,16 @@ class PatchManager(object):
         registry.registerAdapter(factory, required, provided, name)
         return factory
 
-    def patch_handler(self, args):
-        pass
+    def patch_handler(self, handler, required, registry=None):
+        if registry is None:
+            registry = self.registry
+        self.added_handlers.append((registry, handler, required))
+        registry.registerHandler(handler, required)
 
     def reset(self):
         self._reset_utilities()
         self._reset_adapters()
+        self._reset_handlers()
 
     def _reset_utilities(self):
         for registry, orig, interface, name in self.utilities:
@@ -52,3 +57,11 @@ class PatchManager(object):
     def _reset_adapters(self):
         for registry, orig, required, provided, name in self.adapters:
             registry.registerAdapter(orig, required, provided, name)
+
+    def _reset_handlers(self):
+        self._remove_added_handlers()
+        #self._restore_removed_handlers()
+
+    def _remove_added_handlers(self):
+        for registry, handler, required in self.added_handlers:
+            registry.unregisterHandler(handler, required)
