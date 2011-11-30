@@ -5,6 +5,7 @@ from zope.interface import Interface
 import gocept.zcapatch
 import mock
 import unittest
+import zope.component.globalregistry
 import zope.component.registry
 
 
@@ -19,6 +20,16 @@ class PatchesTest(unittest.TestCase):
         self.assertEqual('bar', registry.getUtility(Interface))
         man.reset()
         self.assertEqual('foo', registry.getUtility(Interface))
+
+    def test_utility_with_name_is_restored_after_reset(self):
+        registry = zope.component.registry.Components()
+        registry.registerUtility('foo', Interface, name='foo')
+        self.assertEqual('foo', registry.getUtility(Interface, 'foo'))
+        man = gocept.zcapatch.Patches(registry)
+        man.patch_utility('bar', Interface, name='foo')
+        self.assertEqual('bar', registry.getUtility(Interface, 'foo'))
+        man.reset()
+        self.assertEqual('foo', registry.getUtility(Interface, 'foo'))
 
     def test_replaced_adapter_is_restored_after_reset(self):
         registry = zope.component.registry.Components()
@@ -112,3 +123,24 @@ class PatchesTest(unittest.TestCase):
         man.reset()
         registry.handle(object())
         self.assertFalse(handler.called)
+
+
+class GlobalRegistryTest(unittest.TestCase):
+
+    def setUp(self):
+        # don't want to pull in zope.testing just for this,
+        # so we duplicate the effect of zope.component.testing.setUp/tearDown
+        zope.component.globalregistry.base.__init__('base')
+
+    def tearDown(self):
+        self.setUp()
+
+    def test_no_registry_given_uses_getSiteManager(self):
+        man = gocept.zcapatch.Patches()
+        gsm = zope.component.getSiteManager()
+        gsm.registerUtility('foo', Interface)
+        self.assertEqual('foo', gsm.getUtility(Interface))
+        man.patch_utility('bar', Interface)
+        self.assertEqual('bar', gsm.getUtility(Interface))
+        man.reset()
+        self.assertEqual('foo', gsm.getUtility(Interface))

@@ -16,18 +16,15 @@ class Patches(object):
             registry = zope.component.getSiteManager()
         self.registry = registry
 
-    def patch_utility(self, new, provided=None, name=None, registry=None):
+    def patch_utility(self, new, provided=None, name=u'', registry=None):
         if registry is None:
             registry = self.registry
         if provided is None:
             provided = zope.component.registry._getUtilityProvided(new)
-        orig = registry.queryUtility(provided)
+        orig = registry.queryUtility(provided, name)
         if orig is not None:
             self.utilities.append((registry, orig, provided, name))
-        if name is None:
-            registry.registerUtility(new, provided)
-        else:
-            registry.registerUtility(new, provided, name)
+        registry.registerUtility(new, provided, name)
         return new
 
     def patch_adapter(self, factory, required=None, provided=None,
@@ -64,10 +61,7 @@ class Patches(object):
 
     def _reset_utilities(self):
         for registry, orig, interface, name in self.utilities:
-            if name is None:
-                registry.registerUtility(orig, interface)
-            else:
-                registry.registerUtility(orig, interface, name)
+            registry.registerUtility(orig, interface, name)
 
     def _reset_adapters(self):
         for registry, orig, required, provided, name in self.adapters:
