@@ -15,7 +15,7 @@ class PatchManagerTest(unittest.TestCase):
         registry.registerUtility('foo', Interface)
         self.assertEqual('foo', registry.getUtility(Interface))
         man = gocept.zcapatch.PatchManager(registry)
-        man.patch_utility(Interface, 'bar')
+        man.patch_utility('bar', Interface)
         self.assertEqual('bar', registry.getUtility(Interface))
         man.reset()
         self.assertEqual('foo', registry.getUtility(Interface))

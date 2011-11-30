@@ -15,7 +15,7 @@ class PatchManager(object):
             registry = zope.component.getSiteManager()
         self.registry = registry
 
-    def patch_utility(self, interface, new, name=None, registry=None):
+    def patch_utility(self, new, interface, name=None, registry=None):
         if registry is None:
             registry = self.registry
         orig = registry.queryUtility(interface)

@@ -1,7 +1,6 @@
 TODO
 
 - patch_adapter/handler: if required/provided is None: read from factory
-- Change signature for patch_utility to conform to registerUtility
 - better name for PatchManager
 - write tests to cover edge cases (passed-in registry etc.)
 - write README
