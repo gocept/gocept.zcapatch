@@ -7,8 +7,8 @@ from setuptools import setup, find_packages
 setup(
     name='gocept.zcapatch',
     version='0.1dev',
-    author='gocept',
-    author_email='mail@gocept.com',
+    author='gocept <ws at gocept dot com>',
+    author_email='ws@gocept.com',
     url='',
     description="""\
 """,
