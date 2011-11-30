@@ -5,7 +5,7 @@ import zope.component
 import zope.component.registry
 
 
-class PatchManager(object):
+class Patches(object):
 
     def __init__(self, registry=None):
         self.utilities = []

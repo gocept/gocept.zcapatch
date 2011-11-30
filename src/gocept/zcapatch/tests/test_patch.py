@@ -8,13 +8,13 @@ import unittest
 import zope.component.registry
 
 
-class PatchManagerTest(unittest.TestCase):
+class PatchesTest(unittest.TestCase):
 
     def test_replaced_utility_is_restored_after_reset(self):
         registry = zope.component.registry.Components()
         registry.registerUtility('foo', Interface)
         self.assertEqual('foo', registry.getUtility(Interface))
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.patch_utility('bar', Interface)
         self.assertEqual('bar', registry.getUtility(Interface))
         man.reset()
@@ -24,7 +24,7 @@ class PatchManagerTest(unittest.TestCase):
         registry = zope.component.registry.Components()
         registry.registerAdapter(lambda x: 'foo', (Interface,), Interface)
         self.assertEqual('foo', registry.getAdapter(object(), Interface))
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.patch_adapter(lambda x: 'bar', (Interface,), Interface)
         self.assertEqual('bar', registry.getAdapter(object(), Interface))
         man.reset()
@@ -39,7 +39,7 @@ class PatchManagerTest(unittest.TestCase):
 
         registry = zope.component.registry.Components()
         self.assertIsNone(registry.queryUtility(IFoo))
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.patch_utility(Util())
         self.assertIsNotNone(registry.queryUtility(IFoo))
 
@@ -62,7 +62,7 @@ class PatchManagerTest(unittest.TestCase):
 
         registry = zope.component.registry.Components()
         self.assertIsNone(registry.queryAdapter(foo, IBar))
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.patch_adapter(Adapter)
         self.assertIsNotNone(registry.queryAdapter(foo, IBar))
 
@@ -72,7 +72,7 @@ class PatchManagerTest(unittest.TestCase):
         registry.handle(object())
         self.assertFalse(handler.called)
 
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.patch_handler(handler, (Interface,))
         registry.handle(object())
         self.assertTrue(handler.called)
@@ -90,7 +90,7 @@ class PatchManagerTest(unittest.TestCase):
         self.assertTrue(handler.called)
         handler.reset_mock()
 
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.remove_handler(handler, (Interface,))
         registry.handle(object())
         self.assertFalse(handler.called)
@@ -104,7 +104,7 @@ class PatchManagerTest(unittest.TestCase):
         registry = zope.component.registry.Components()
         handler = mock.Mock()
 
-        man = gocept.zcapatch.PatchManager(registry)
+        man = gocept.zcapatch.Patches(registry)
         man.remove_handler(handler, (Interface,))
         registry.handle(object())
         self.assertFalse(handler.called)
