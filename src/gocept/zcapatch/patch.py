@@ -2,6 +2,7 @@
 # See also LICENSE.txt
 
 import zope.component
+import zope.component.registry
 
 
 class PatchManager(object):
@@ -15,22 +16,29 @@ class PatchManager(object):
             registry = zope.component.getSiteManager()
         self.registry = registry
 
-    def patch_utility(self, new, interface, name=None, registry=None):
+    def patch_utility(self, new, provided=None, name=None, registry=None):
         if registry is None:
             registry = self.registry
-        orig = registry.queryUtility(interface)
+        if provided is None:
+            provided = zope.component.registry._getUtilityProvided(new)
+        orig = registry.queryUtility(provided)
         if orig is not None:
-            self.utilities.append((registry, orig, interface, name))
+            self.utilities.append((registry, orig, provided, name))
         if name is None:
-            registry.registerUtility(new, interface)
+            registry.registerUtility(new, provided)
         else:
-            registry.registerUtility(new, interface, name)
+            registry.registerUtility(new, provided, name)
         return new
 
     def patch_adapter(self, factory, required=None, provided=None,
                       name=u'', registry=None):
         if registry is None:
             registry = self.registry
+        if required is None:
+            required = zope.component.registry._getAdapterRequired(
+                factory, required)
+        if provided is None:
+            provided = zope.component.registry._getAdapterProvided(factory)
         orig = registry.adapters.lookup(required, provided, name)
         if orig is not None:
             self.adapters.append((registry, orig, required, provided, name))

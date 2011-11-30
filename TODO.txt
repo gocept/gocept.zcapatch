@@ -1,6 +1,5 @@
 TODO
 
-- patch_adapter/handler: if required/provided is None: read from factory
 - better name for PatchManager
 - write tests to cover edge cases (passed-in registry etc.)
 - write README

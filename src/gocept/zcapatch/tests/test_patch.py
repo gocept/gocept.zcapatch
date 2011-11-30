@@ -30,6 +30,42 @@ class PatchManagerTest(unittest.TestCase):
         man.reset()
         self.assertEqual('foo', registry.getAdapter(object(), Interface))
 
+    def test_if_no_interface_given_is_read_from_utility(self):
+        class IFoo(Interface):
+            pass
+
+        class Util(object):
+            zope.interface.implements(IFoo)
+
+        registry = zope.component.registry.Components()
+        self.assertIsNone(registry.queryUtility(IFoo))
+        man = gocept.zcapatch.PatchManager(registry)
+        man.patch_utility(Util())
+        self.assertIsNotNone(registry.queryUtility(IFoo))
+
+    def test_if_no_interface_adapts_given_is_read_from_adapter(self):
+        class IFoo(Interface):
+            pass
+
+        class IBar(Interface):
+            pass
+
+        class Adapter(object):
+            zope.component.adapts(IFoo)
+            zope.interface.implements(IBar)
+
+            def __init__(self, context):
+                pass
+
+        foo = type('Dummy', (object,), {})()
+        zope.interface.alsoProvides(foo, IFoo)
+
+        registry = zope.component.registry.Components()
+        self.assertIsNone(registry.queryAdapter(foo, IBar))
+        man = gocept.zcapatch.PatchManager(registry)
+        man.patch_adapter(Adapter)
+        self.assertIsNotNone(registry.queryAdapter(foo, IBar))
+
     def test_added_handler_is_removed_after_reset(self):
         registry = zope.component.registry.Components()
         handler = mock.Mock()
