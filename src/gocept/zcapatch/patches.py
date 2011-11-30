@@ -42,15 +42,21 @@ class Patches(object):
         registry.registerAdapter(factory, required, provided, name)
         return factory
 
-    def patch_handler(self, handler, required, registry=None):
+    def patch_handler(self, handler, required=None, registry=None):
         if registry is None:
             registry = self.registry
+        if required is None:
+            required = zope.component.registry._getAdapterRequired(
+                handler, required)
         self.added_handlers.append((registry, handler, required))
         registry.registerHandler(handler, required)
 
-    def remove_handler(self, handler, required, registry=None):
+    def remove_handler(self, handler, required=None, registry=None):
         if registry is None:
             registry = self.registry
+        if required is None:
+            required = zope.component.registry._getAdapterRequired(
+                handler, required)
         if registry.unregisterHandler(handler, required):
             self.removed_handlers.append((registry, handler, required))
 

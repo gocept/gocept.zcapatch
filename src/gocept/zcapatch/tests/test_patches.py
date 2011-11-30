@@ -77,6 +77,27 @@ class PatchesTest(unittest.TestCase):
         man.patch_adapter(Adapter)
         self.assertIsNotNone(registry.queryAdapter(foo, IBar))
 
+    def test_if_no_adapts_given_is_read_from_handler(self):
+        class IFoo(Interface):
+            pass
+
+        @zope.component.adapter(IFoo)
+        def handler(context):
+            self.called = True
+
+        foo = type('Dummy', (object,), {})()
+        zope.interface.alsoProvides(foo, IFoo)
+
+        self.called = False
+
+        registry = zope.component.registry.Components()
+        registry.handle(foo)
+        self.assertFalse(self.called)
+        man = gocept.zcapatch.Patches(registry)
+        man.patch_handler(handler)
+        registry.handle(foo)
+        self.assertTrue(self.called)
+
     def test_added_handler_is_removed_after_reset(self):
         registry = zope.component.registry.Components()
         handler = mock.Mock()
