@@ -45,3 +45,34 @@ class PatchManagerTest(unittest.TestCase):
         man.reset()
         registry.handle(object())
         self.assertFalse(handler.called)
+
+    def test_removed_handler_is_restored_after_reset(self):
+        registry = zope.component.registry.Components()
+        handler = mock.Mock()
+        registry.registerHandler(handler, (Interface,))
+        registry.handle(object())
+        self.assertTrue(handler.called)
+        handler.reset_mock()
+
+        man = gocept.zcapatch.PatchManager(registry)
+        man.remove_handler(handler, (Interface,))
+        registry.handle(object())
+        self.assertFalse(handler.called)
+        handler.reset_mock()
+
+        man.reset()
+        registry.handle(object())
+        self.assertTrue(handler.called)
+
+    def test_remove_not_registeredhandler_should_noop_and_not_restore(self):
+        registry = zope.component.registry.Components()
+        handler = mock.Mock()
+
+        man = gocept.zcapatch.PatchManager(registry)
+        man.remove_handler(handler, (Interface,))
+        registry.handle(object())
+        self.assertFalse(handler.called)
+
+        man.reset()
+        registry.handle(object())
+        self.assertFalse(handler.called)

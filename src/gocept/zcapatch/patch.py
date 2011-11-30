@@ -10,6 +10,7 @@ class PatchManager(object):
         self.utilities = []
         self.adapters = []
         self.added_handlers = []
+        self.removed_handlers = []
         if registry is None:
             registry = zope.component.getSiteManager()
         self.registry = registry
@@ -42,6 +43,12 @@ class PatchManager(object):
         self.added_handlers.append((registry, handler, required))
         registry.registerHandler(handler, required)
 
+    def remove_handler(self, handler, required, registry=None):
+        if registry is None:
+            registry = self.registry
+        if registry.unregisterHandler(handler, required):
+            self.removed_handlers.append((registry, handler, required))
+
     def reset(self):
         self._reset_utilities()
         self._reset_adapters()
@@ -60,8 +67,12 @@ class PatchManager(object):
 
     def _reset_handlers(self):
         self._remove_added_handlers()
-        #self._restore_removed_handlers()
+        self._restore_removed_handlers()
 
     def _remove_added_handlers(self):
         for registry, handler, required in self.added_handlers:
             registry.unregisterHandler(handler, required)
+
+    def _restore_removed_handlers(self):
+        for registry, handler, required in self.removed_handlers:
+            registry.registerHandler(handler, required)
