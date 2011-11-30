@@ -7,10 +7,11 @@ from setuptools import setup, find_packages
 setup(
     name='gocept.zcapatch',
     version='0.1dev',
-    author='gocept <ws at gocept dot com>',
+    author='Wolfgang Schnerring <ws at gocept dot com>, Thomas Lotze <tl at gocept dot com>',
     author_email='ws@gocept.com',
-    url='',
+    url='http://code.gocept.com/hg/public/gocept.zcapatch',
     description="""\
+Test helpers to temporarily alter zope.component registrations
 """,
     long_description=(
         open('README.txt').read()
