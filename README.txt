@@ -15,7 +15,7 @@ Usage
 
 To change something in a registry, instantiate ``gocept.zcapatch.Patches`` for
 that registry (if no registry is given, the current one as returned by
-``zope.component.getSiteManager`` is used). It offers the following methods:
+``zope.component.getSiteManager()`` is used). It offers the following methods:
 
 :patch_utility(new, provided=None, name=u'', registry=None):
     Register the given ``new`` object as a utility, instead of what is
@@ -28,9 +28,9 @@ that registry (if no registry is given, the current one as returned by
 
 :patch_adapter(factory, required=None, provided=None, name=u'', registry=None):
     Register the given ``factory`` as an adapter, instead of what is
-    currently registered for this required/provided interfaces (and name).
+    currently registered for these required and provided interfaces (and name).
 
-    If no ``required`` and/or ``provided`` interfaces are given, they are read
+    Any of the ``required`` or ``provided`` interfaces not given will be read
     from the object's ``zope.component.adapts`` and
     ``zope.interface.implements`` declarations.
 
@@ -51,12 +51,13 @@ that registry (if no registry is given, the current one as returned by
     (Since handlers are set-valued, you cannot delete one without explicitly
     specifying which one you mean.)
 
+    If no ``required`` interfaces are given, they are read from the object's
+    ``zope.component.adapts`` declaration.
 
 :reset:
     Undo all changes made via this ``Patches`` instance:
     Unregister all utilities, adapters and handlers added, and restore
-    any previously present registrations that were replaced by them.
-
+    any previously present registrations that were replaced or removed.
 
 
 Here's a typical usage example::
@@ -71,7 +72,7 @@ Here's a typical usage example::
             self.zca = gocept.zcapatch.Patches()
 
         def tearDown(self):
-            self.zca.tearDown()
+            self.zca.reset()
 
         def test_something(self):
             self.zca.patch_utility(...)
