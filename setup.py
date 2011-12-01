@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gocept.zcapatch',
-    version='1.0',
+    version='1.1dev',
     author='Wolfgang Schnerring <ws at gocept dot com>, Thomas Lotze <tl at gocept dot com>',
     author_email='ws@gocept.com',
     url='http://code.gocept.com/hg/public/gocept.zcapatch',
