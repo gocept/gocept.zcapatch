@@ -84,6 +84,5 @@ Development
 The source code is available in the mercurial repository at
 https://code.gocept.com/hg/public/gocept.zcapatch
 
-Please report any bugs you find to `Wolfgang Schnerring`_.
-
-.. _`Wolfgang Schnerring`: mailto:ws@gocept.com
+Please report any bugs you find at
+https://projects.gocept.com/projects/projects/gocept-zcapatch/issues
