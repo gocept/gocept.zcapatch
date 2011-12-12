@@ -78,6 +78,26 @@ Here's a typical usage example::
             self.zca.patch_utility(...)
 
 
+Alternatives
+============
+
+`plone.testing`_ provides the ability to create a stack of registries, where
+each delegates to the previous one (``plone.testing.zca.pushGlobalRegistry`` /
+``popGlobalRegistry``) -- so you could, for example, push a new registry for
+each test, manipulate that at will, and throw it away afterwards. While this
+approach is much more elegant than the one provided by ``gocept.zcapatch``
+for common use cases, do note the following limitations:
+
+* ``plone.testing`` only ever deals with
+  ``zope.component.getGlobalSiteManager()``, so you can't stack other
+  registries (e.g. LocalSiteManagers as implemented by `zope.site`_).
+* ``plone.testing`` does not allow you to (temporarily) delete registrations
+  from the registry.
+
+.. _`plone.testing`: http://pypi.python.org/pypi/plone.testing
+.. _`zope.site`: http://pypi.python.org/pypi/zope.site
+
+
 Development
 ===========
 
