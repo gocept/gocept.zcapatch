@@ -21,6 +21,16 @@ class PatchesTest(unittest.TestCase):
         man.reset()
         self.assertEqual('foo', registry.getUtility(Interface))
 
+    def test_passing_None_deletes_the_utility_registration(self):
+        registry = zope.component.registry.Components()
+        registry.registerUtility('foo', Interface)
+        self.assertEqual('foo', registry.getUtility(Interface))
+        man = gocept.zcapatch.Patches(registry)
+        man.patch_utility(None, Interface)
+        self.assertRaises(LookupError, lambda: registry.getUtility(Interface))
+        man.reset()
+        self.assertEqual('foo', registry.getUtility(Interface))
+
     def test_utility_with_name_is_restored_after_reset(self):
         registry = zope.component.registry.Components()
         registry.registerUtility('foo', Interface, name='foo')
@@ -38,6 +48,17 @@ class PatchesTest(unittest.TestCase):
         man = gocept.zcapatch.Patches(registry)
         man.patch_adapter(lambda x: 'bar', (Interface,), Interface)
         self.assertEqual('bar', registry.getAdapter(object(), Interface))
+        man.reset()
+        self.assertEqual('foo', registry.getAdapter(object(), Interface))
+
+    def test_passing_lambda_None_deletes_adapter(self):
+        registry = zope.component.registry.Components()
+        registry.registerAdapter(lambda x: 'foo', (Interface,), Interface)
+        self.assertEqual('foo', registry.getAdapter(object(), Interface))
+        man = gocept.zcapatch.Patches(registry)
+        man.patch_adapter(lambda x: None, (Interface,), Interface)
+        self.assertRaises(
+            LookupError, lambda: registry.getAdapter(object(), Interface))
         man.reset()
         self.assertEqual('foo', registry.getAdapter(object(), Interface))
 
