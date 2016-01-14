@@ -101,8 +101,5 @@ for common use cases, do note the following limitations:
 Development
 ===========
 
-The source code is available in the mercurial repository at
-https://code.gocept.com/hg/public/gocept.zcapatch
-
-Please report any bugs you find at
-https://projects.gocept.com/projects/projects/gocept-zcapatch/issues
+The mercurial repository of the source code as well as the issue tracker are
+available at <https://bitbucket.org/gocept/gocept.zcapatch>.
