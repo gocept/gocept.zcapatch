@@ -1,8 +1,12 @@
 syntax: glob
 *.pyc
 *.egg-info
+.cache
+.coverage
 .installed.cfg
 bin
+coverage-report
+coverage.xml
 develop-eggs
 include
 local
