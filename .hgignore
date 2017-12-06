@@ -4,6 +4,7 @@ syntax: glob
 .cache
 .coverage
 .installed.cfg
+.tox/
 bin
 coverage-report
 coverage.xml
@@ -12,3 +13,4 @@ include
 local
 lib
 parts
+test-report/

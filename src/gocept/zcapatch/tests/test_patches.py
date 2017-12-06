@@ -66,8 +66,9 @@ class PatchesTest(unittest.TestCase):
         class IFoo(Interface):
             pass
 
+        @zope.interface.implementer(IFoo)
         class Util(object):
-            zope.interface.implements(IFoo)
+            pass
 
         registry = zope.component.registry.Components()
         self.assertIsNone(registry.queryUtility(IFoo))
@@ -82,9 +83,9 @@ class PatchesTest(unittest.TestCase):
         class IBar(Interface):
             pass
 
+        @zope.component.adapter(IFoo)
+        @zope.interface.implementer(IBar)
         class Adapter(object):
-            zope.component.adapts(IFoo)
-            zope.interface.implements(IBar)
 
             def __init__(self, context):
                 pass
