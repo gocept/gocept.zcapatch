@@ -14,6 +14,7 @@ Test helpers to temporarily alter zope.component registrations
         open('README.rst').read()
         + '\n\n'
         + open('CHANGES.rst').read()),
+    keywords="zca testing patch adapter utility remove",
     classifiers="""\
 License :: OSI Approved :: Zope Public License
 Programming Language :: Python
