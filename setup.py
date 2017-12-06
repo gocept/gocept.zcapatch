@@ -5,7 +5,7 @@ setup(
     name='gocept.zcapatch',
     version='1.1.dev0',
     author='Wolfgang Schnerring, Thomas Lotze <mail at gocept dot com>',
-    author_email='tl@gocept.com',
+    author_email='mail@gocept.com',
     url='https://bitbucket.org/gocept/gocept.zcapatch',
     description="""\
 Test helpers to temporarily alter zope.component registrations
